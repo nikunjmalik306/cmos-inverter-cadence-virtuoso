@@ -1,0 +1,51 @@
+// ============================================================================
+// Design: CMOS Inverter Subcircuit & Testbench
+// Technology: Cadence GPDK 90nm (gpdk090)
+// Simulator: Cadence Spectre (ADE L)
+// Author: Nikunj Malik
+// ============================================================================
+
+simulator lang=spectre
+global 0 vdd! vss!
+
+// ----------------------------------------------------------------------------
+// CMOS Inverter Subcircuit Definition
+// ----------------------------------------------------------------------------
+subckt inverter (vin vout vdd vss)
+    // PMOS transistor (W = 240nm, L = 100nm, m = 1)
+    PM0 (vout vin vdd vdd) gpdk090_pmos1v w=240n l=100n m=1 \
+        ad=1.152e-13 as=1.152e-13 pd=1.44u ps=1.44u
+
+    // NMOS transistor (W = 120nm, L = 100nm, m = 1)
+    NM0 (vout vin vss vss) gpdk090_nmos1v w=120n l=100n m=1 \
+        ad=5.76e-14 as=5.76e-14 pd=1.2u ps=1.2u
+ends inverter
+
+// ----------------------------------------------------------------------------
+// Testbench Instance
+// ----------------------------------------------------------------------------
+XINV1 (vin vout vdd 0) inverter
+
+// ----------------------------------------------------------------------------
+// DC Power Supply (VDD = 1.0 V)
+// ----------------------------------------------------------------------------
+V0 (vdd 0) vsource dc=1.0 type=dc
+
+// ----------------------------------------------------------------------------
+// Input Stimulus Sources
+// ----------------------------------------------------------------------------
+// Transient Pulse Source: 0V to 1V, period=10ns, pulse width=5ns, tr=20ps, tf=20ps
+V1 (vin 0) vsource type=pulse val0=0 val1=1.0 period=10n width=5n \
+    delay=0 rise=20p fall=20p
+
+// ----------------------------------------------------------------------------
+// Simulation Directives
+// ----------------------------------------------------------------------------
+// Transient Analysis (0 to 20ns)
+tran tran stop=20n errpreset=conservative write="spectre.ic"
+
+// DC Analysis (VTC sweep from 0V to 1.0V)
+dc dc dev=V1 param=dc start=0 stop=1.0 step=0.005
+
+// Save options
+save vin vout vdd

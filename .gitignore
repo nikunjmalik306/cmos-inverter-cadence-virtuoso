@@ -1,0 +1,42 @@
+# Cadence Virtuoso Logs and Runtime Files
+*.log
+*.log*
+cds.log*
+cds.lib.bak
+lib.defs.bak
+*.val
+*.cdslck
+*~
+*.swp
+*.swo
+
+# Simulation Outputs and Waveforms
+*.raw
+*.tr0
+*.ac0
+*.dc0
+*.psf
+*.vcd
+*.fsdb
+spectre.ic
+spectre.fc
+runObjFile
+
+# Assura DRC / LVS Run Directories
+run1/
+run2/
+run_drc/
+run_lvs/
+assura_run/
+ASSURA_LVS/
+*.cps
+*.csm
+*.erc_errors
+*.drc_errors
+*.lvs_errors
+
+# OS Generated Files
+.DS_Store
+.Spotlight-V100
+.Trashes
+Thumbs.db
